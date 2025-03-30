@@ -128,6 +128,7 @@ function App() {
                                     <p className={styles.address}>
                                         {shop.address}
                                     </p>
+
                                     {shop.rating && (
                                         <div className={styles.rating}>
                                             <span>Рейтинг: </span>
@@ -155,18 +156,74 @@ function App() {
                                             <span>
                                                 ({shop.rating.toFixed(1)})
                                             </span>
+                                            {shop.total_reviews > 0 && (
+                                                <span
+                                                    className={
+                                                        styles.reviewsCount
+                                                    }
+                                                >
+                                                    {" "}
+                                                    • {shop.total_reviews}{" "}
+                                                    відгуків
+                                                </span>
+                                            )}
                                         </div>
                                     )}
-                                    {shop.location && (
-                                        <a
-                                            href={`https://www.google.com/maps?q=${shop.location.lat},${shop.location.lng}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.mapLink}
-                                        >
-                                            Відкрити на мапі
-                                        </a>
+
+                                    {shop.opening_hours && (
+                                        <div className={styles.openingHours}>
+                                            <h4>Години роботи:</h4>
+                                            <ul>
+                                                {shop.opening_hours.map(
+                                                    (hour, i) => (
+                                                        <li key={i}>{hour}</li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        </div>
                                     )}
+
+                                    <div className={styles.linksContainer}>
+                                        {shop.location && (
+                                            <a
+                                                href={`https://www.google.com/maps?q=${shop.location.lat},${shop.location.lng}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.mapLink}
+                                            >
+                                                Відкрити на мапі
+                                            </a>
+                                        )}
+
+                                        {shop.website && (
+                                            <a
+                                                href={
+                                                    shop.website.startsWith(
+                                                        "http"
+                                                    )
+                                                        ? shop.website
+                                                        : `https://${shop.website}`
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.websiteLink}
+                                            >
+                                                Перейти на сайт
+                                            </a>
+                                        )}
+
+                                        {shop.phone && (
+                                            <a
+                                                href={`tel:${shop.phone.replace(
+                                                    /[^0-9+]/g,
+                                                    ""
+                                                )}`}
+                                                className={styles.phoneLink}
+                                            >
+                                                {shop.phone}
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
