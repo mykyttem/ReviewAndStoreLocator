@@ -57,21 +57,27 @@ async def receive_location(request: Request):
     shops = []
     if shops_data.get("results"):
         for place in shops_data["results"]:
-            details = {}
-            if "place_id" in place:
-                details_response = await get_place_details(place["place_id"])
-                details = details_response.get("result", {})
+            rating = place.get("rating")
+            total_reviews = place.get("user_ratings_total", 0)
+            
+            C = 3
+            m = 3.5
+            weighted_rating = 0
+            
+            if rating and total_reviews > 0:
+                weighted_rating = (total_reviews * rating + C * m) / (total_reviews + C)
             
             shops.append({
                 "name": place.get("name"),
                 "address": place.get("vicinity"),
-                "rating": place.get("rating"),
-                "total_reviews": place.get("user_ratings_total", 0),
-                "website": details.get("website"),
-                "phone": details.get("formatted_phone_number"),
-                "opening_hours": details.get("opening_hours", {}).get("weekday_text"),
+                "rating": rating,
+                "total_reviews": total_reviews,
+                "weighted_rating": weighted_rating,
+                "website": place.get("website"),
                 "location": place.get("geometry", {}).get("location")
             })
+    
+    shops.sort(key=lambda x: x.get("weighted_rating", 0), reverse=True)
     
     return {
         "status": "success",
