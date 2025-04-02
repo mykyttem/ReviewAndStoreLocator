@@ -11,7 +11,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [showStats, setShowStats] = useState(false);
 
-    // Статистика магазинів
+    // statistics shops
     const shopsStats = {
         total: shops.length,
         averageRating:
@@ -93,9 +93,12 @@ function App() {
         setShowStats(!showStats);
     };
 
+    useEffect(() => {
+        fetchLocationAndShops();
+    }, []);
+
     return (
         <div className={styles.appContainer}>
-            {/* Навігаційна панель зліва */}
             <nav className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
                     <h3>Меню</h3>
@@ -121,39 +124,45 @@ function App() {
                     </li>
                 </ul>
 
-                {/* Блок статистики */}
-                {showStats && (
-                    <div className={styles.statsPanel}>
-                        <h4>Статистика магазинів</h4>
-                        <div className={styles.statItem}>
-                            <span>Всього магазинів:</span>
-                            <span className={styles.statValue}>
-                                {shopsStats.total}
-                            </span>
-                        </div>
-                        <div className={styles.statItem}>
-                            <span>Середній рейтинг:</span>
-                            <span className={styles.statValue}>
-                                {shopsStats.averageRating.toFixed(1)}
-                            </span>
-                        </div>
-                        {shopsStats.topRated && (
-                            <div className={styles.statItem}>
-                                <span>Найкращий магазин:</span>
-                                <span className={styles.statValue}>
-                                    {shopsStats.topRated.name} (
-                                    {shopsStats.topRated.rating.toFixed(1)})
-                                </span>
-                            </div>
-                        )}
+                <div
+                    className={`${styles.statsPanel} ${
+                        showStats ? styles.visible : ""
+                    }`}
+                >
+                    <h4>Статистика магазинів</h4>
+                    <div className={styles.statItem}>
+                        <span>Всього магазинів:</span>
+                        <span className={styles.statValue}>
+                            {shopsStats.total}
+                        </span>
                     </div>
-                )}
+                    <div className={styles.statItem}>
+                        <span>Середній рейтинг:</span>
+                        <span className={styles.statValue}>
+                            {shopsStats.averageRating.toFixed(1)}
+                        </span>
+                    </div>
+                    {shopsStats.topRated && (
+                        <div className={styles.statItem}>
+                            <span>Найкращий магазин:</span>
+                            <span className={styles.statValue}>
+                                {shopsStats.topRated.name} (
+                                {shopsStats.topRated.rating.toFixed(1)})
+                            </span>
+                        </div>
+                    )}
+                </div>
             </nav>
 
-            {/* Основний вміст */}
             <div className={styles.mainContentWrapper}>
                 <header className={styles.header}>
                     <h1 className={styles.title}>🔍 Магазини поблизу</h1>
+                    <button
+                        onClick={handleRefresh}
+                        className={styles.refreshButton}
+                    >
+                        Оновити
+                    </button>
                 </header>
 
                 <main className={styles.mainContent}>
