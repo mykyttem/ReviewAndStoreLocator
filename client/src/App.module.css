@@ -426,3 +426,23 @@
         font-size: 28px;
     }
 }
+
+.offlineBanner {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    border-bottom: 1px solid #ffeeba;
+}
+
+.offlineInfo {
+    background-color: #e2e3e5;
+    color: #383d41;
+    padding: 8px 15px;
+    margin: 0 15px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}

@@ -10,6 +10,63 @@ function App() {
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showStats, setShowStats] = useState(false);
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+    const [offlineMessage, setOfflineMessage] = useState("");
+
+    // Перевірка стану мережі
+    useEffect(() => {
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
+    }, []);
+
+
+    useEffect(() => {
+        const cachedData = localStorage.getItem("cachedShops");
+        if (cachedData) {
+            try {
+                const {
+                    shops: cachedShops,
+                    timestamp,
+                    location: cachedLocation,
+                } = JSON.parse(cachedData);
+
+                if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+                    setShops(cachedShops);
+                    if (cachedLocation) {
+                        setLocation((prev) => ({
+                            ...prev,
+                            latitude: cachedLocation.latitude,
+                            longitude: cachedLocation.longitude,
+                        }));
+                    }
+                    setOfflineMessage(
+                        "Використовуються кешовані дані (останнє оновлення: " +
+                            new Date(timestamp).toLocaleString() +
+                            ")"
+                    );
+                }
+            } catch (e) {
+                console.error("Помилка читання кешованих даних:", e);
+            }
+        }
+    }, []);
+
+    const cacheShops = (shopsData, loc) => {
+        const cacheData = {
+            shops: shopsData,
+            location: loc,
+            timestamp: Date.now(),
+        };
+        localStorage.setItem("cachedShops", JSON.stringify(cacheData));
+    };
 
     // statistics shops
     const shopsStats = {
@@ -26,15 +83,24 @@ function App() {
     };
 
     const fetchLocationAndShops = async () => {
+        if (!isOnline) {
+            setLocation((prev) => ({
+                ...prev,
+                error: "Ви не в мережі. Використовуються кешовані дані.",
+            }));
+            return;
+        }
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
-                    setLocation({
+                    const currentLocation = {
                         latitude,
                         longitude,
                         error: null,
-                    });
+                    };
+                    setLocation(currentLocation);
                     setLoading(true);
 
                     try {
@@ -52,16 +118,30 @@ function App() {
                             }
                         );
 
+                        if (!response.ok)
+                            throw new Error("Network response was not ok");
+
                         const data = await response.json();
 
                         if (data.status === "success") {
-                            setShops(data.nearby_shops || []);
+                            const shopsData = data.nearby_shops || [];
+                            setShops(shopsData);
+                            cacheShops(shopsData, { latitude, longitude });
+                            setOfflineMessage("");
                         }
                     } catch (error) {
                         console.error("Error:", error);
+                        const cachedData = localStorage.getItem("cachedShops");
+                        if (cachedData) {
+                            const { shops: cachedShops } =
+                                JSON.parse(cachedData);
+                            if (cachedShops && cachedShops.length > 0) {
+                                setShops(cachedShops);
+                            }
+                        }
                         setLocation((prev) => ({
                             ...prev,
-                            error: "Помилка отримання даних",
+                            error: "Помилка отримання даних. Використовуються кешовані дані.",
                         }));
                     } finally {
                         setLoading(false);
@@ -99,6 +179,12 @@ function App() {
 
     return (
         <div className={styles.appContainer}>
+            {!isOnline && (
+                <div className={styles.offlineBanner}>
+                    ⚠️ Ви не в мережі. Використовуються кешовані дані.
+                </div>
+            )}
+
             <nav className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
                     <h3>Меню</h3>
@@ -189,6 +275,11 @@ function App() {
                                     Довгота: {location.longitude?.toFixed(4)}
                                 </span>
                             </div>
+                            {offlineMessage && (
+                                <p className={styles.offlineInfoSmall}>
+                                    ℹ️ {offlineMessage}
+                                </p>
+                            )}
                         </div>
                     )}
 
