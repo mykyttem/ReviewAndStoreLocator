@@ -4,96 +4,6 @@
     flex-direction: column;
 }
 
-.sidebar {
-    width: 100%;
-    background-color: #2c3e50;
-    color: white;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.sidebarHeader {
-    padding: 0 15px 10px;
-    border-bottom: 1px solid #34495e;
-    margin-bottom: 10px;
-    display: none;
-}
-
-.sidebarHeader h3 {
-    margin: 0;
-    font-size: 1.2rem;
-}
-
-.sidebarMenu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-}
-
-.sidebarMenu::-webkit-scrollbar {
-    display: none;
-}
-
-.menuButton {
-    padding: 10px 15px;
-    background: none;
-    border: none;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
-    flex-shrink: 0;
-}
-
-.menuButton:hover {
-    background-color: #34495e;
-}
-
-.menuButton.active {
-    background-color: #3498db;
-}
-
-.statsPanel {
-    padding: 15px;
-    margin: 10px;
-    background-color: #34495e;
-    border-radius: 5px;
-    display: none;
-}
-
-.statsPanel.visible {
-    display: block;
-}
-
-.statsPanel h4 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1rem;
-}
-
-.statItem {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-}
-
-.statValue {
-    font-weight: bold;
-    color: #3498db;
-}
-
 .mainContentWrapper {
     flex: 1;
     padding: 15px;
@@ -136,14 +46,6 @@
     margin-top: 10px;
 }
 
-.locationCard {
-    background-color: #f8f9fa;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
 .coordinates {
     display: flex;
     flex-direction: column;
@@ -162,64 +64,6 @@
     grid-template-columns: 1fr;
     gap: 15px;
     margin-top: 15px;
-}
-
-.shopCard {
-    background: white;
-    border-radius: 6px;
-    padding: 15px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.shopCard:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.shopCard h3 {
-    margin-top: 0;
-    color: #2c3e50;
-    font-size: 1.1rem;
-}
-
-.address {
-    color: #7f8c8d;
-    margin: 8px 0;
-    font-size: 0.9rem;
-}
-
-.rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin: 8px 0;
-    flex-wrap: wrap;
-}
-
-.ratingStars {
-    display: inline-flex;
-}
-
-.filledStar {
-    color: #f39c12;
-}
-
-.emptyStar {
-    color: #bdc3c7;
-}
-
-.mapLink {
-    display: inline-block;
-    margin-top: 8px;
-    color: #3498db;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.mapLink:hover {
-    text-decoration: underline;
 }
 
 .errorBox {
@@ -347,35 +191,6 @@
         flex-direction: row;
     }
 
-    .sidebar {
-        width: 200px;
-        min-height: 100vh;
-        padding: 15px 0;
-        position: static;
-    }
-
-    .sidebarHeader {
-        display: block;
-        padding: 0 15px 15px;
-    }
-
-    .sidebarMenu {
-        display: block;
-        overflow-x: visible;
-        white-space: normal;
-    }
-
-    .menuButton {
-        width: 100%;
-        padding: 10px 15px;
-        text-align: left;
-        font-size: 0.95rem;
-    }
-
-    .statsPanel {
-        margin: 15px;
-    }
-
     .shopGrid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -387,20 +202,6 @@
 }
 
 @media (min-width: 900px) {
-    .sidebar {
-        width: 250px;
-        padding: 20px 0;
-    }
-
-    .sidebarHeader {
-        padding: 0 20px 20px;
-    }
-
-    .menuButton {
-        padding: 12px 20px;
-        font-size: 1rem;
-    }
-
     .mainContentWrapper {
         padding: 20px;
     }

@@ -1,0 +1,93 @@
+import React from "react";
+import ShopCardStyles from "./ShopCard.module.css";
+
+export default function ShopCard({ shop, index }) {
+    return (
+        <div key={index} className={ShopCardStyles.shopCard}>
+            <h3>{shop.name}</h3>
+            <p className={ShopCardStyles.address}>{shop.address}</p>
+
+            {shop.rating && (
+                <div className={ShopCardStyles.rating}>
+                    <span>Рейтинг: </span>
+                    <span className={ShopCardStyles.ratingStars}>
+                        {Array.from({
+                            length: 5,
+                        }).map((_, i) => (
+                            <span
+                                key={i}
+                                className={
+                                    i < Math.round(shop.rating)
+                                        ? ShopCardStyles.filledStar
+                                        : ShopCardStyles.emptyStar
+                                }
+                            >
+                                ★
+                            </span>
+                        ))}
+                    </span>
+                    <span>({shop.rating.toFixed(1)})</span>
+                    {shop.total_reviews > 0 && (
+                        <span className={ShopCardStyles.reviewsCount}>
+                            • {shop.total_reviews} відгуків
+                        </span>
+                    )}
+                    <div className={ShopCardStyles.weightedRating}>
+                        <span>Зважений рейтинг: </span>
+                        <span className={ShopCardStyles.ratingValue}>
+                            {shop.weighted_rating?.toFixed(2) || "н/д"}
+                        </span>
+                    </div>
+                </div>
+            )}
+
+            {shop.opening_hours && (
+                <div className={ShopCardStyles.openingHours}>
+                    <h4>Години роботи:</h4>
+                    <ul>
+                        {shop.opening_hours.map((hour, i) => (
+                            <li key={i}>{hour}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            <div className={ShopCardStyles.linksContainer}>
+                {shop.location && (
+                    <a
+                        href={`https://www.google.com/maps?q=${shop.location.lat},${shop.location.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={ShopCardStyles.mapLink}
+                    >
+                        Відкрити на мапі
+                    </a>
+                )}
+
+                {shop.website && (
+                    <a
+                        href={
+                            shop.website.startsWith("http")
+                                ? shop.website
+                                : `https://${shop.website}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={ShopCardStyles.websiteLink}
+                    >
+                        Перейти на сайт
+                    </a>
+                )}
+
+                {shop.phone && (
+                    <a
+                        href={`tel:${shop.phone.replace(/[^0-9+]/g, "")}`}
+                        className={ShopCardStyles.phoneLink}
+                    >
+                        {shop.phone}
+                    </a>
+                )}
+            </div>
+        </div>
+    );
+}
