@@ -3,18 +3,7 @@
 ## Launch
 
 ```
-cd backend/app
-```
-
-```
-uvicorn app.main:app --reload
-```
-
-```
-cd client
-```
-```
-npm start
+docker-compose up --build
 ```
 
 # TODO
