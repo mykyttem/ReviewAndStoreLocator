@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import styles from "./App.module.css";
 import Sidebar from "./components/SideBar/Sidebar";
 import LocationCard from "./components/LocationCard/LocationCard";
-import ShopCard from "./components/ShopCard/ShopCard";
+import fetchLocationAndShops from "./api/fetchLocationAndShops";
+import OfflineMessage from "./components/OfflineMessage/OfflineMessage";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import LoadingMessage from "./components/LoadingMessage/LoadingMessage";
+import Header from "./components/Header/Header";
+import ListShops from "./components/ListShops/ListShops";
 
 function App() {
     const [location, setLocation] = useState({
@@ -16,20 +21,6 @@ function App() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [offlineMessage, setOfflineMessage] = useState("");
 
-    // Перевірка стану мережі
-    useEffect(() => {
-        const handleOnline = () => setIsOnline(true);
-        const handleOffline = () => setIsOnline(false);
-
-        window.addEventListener("online", handleOnline);
-        window.addEventListener("offline", handleOffline);
-
-        return () => {
-            window.removeEventListener("online", handleOnline);
-            window.removeEventListener("offline", handleOffline);
-        };
-    }, []);
-
     useEffect(() => {
         const cachedData = localStorage.getItem("cachedShops");
         if (cachedData) {
@@ -39,7 +30,6 @@ function App() {
                     timestamp,
                     location: cachedLocation,
                 } = JSON.parse(cachedData);
-
                 if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
                     setShops(cachedShops);
                     if (cachedLocation) {
@@ -70,7 +60,6 @@ function App() {
         localStorage.setItem("cachedShops", JSON.stringify(cacheData));
     };
 
-    // statistics shops
     const shopsStats = {
         total: shops.length,
         averageRating:
@@ -84,108 +73,48 @@ function App() {
                 : null,
     };
 
-    const fetchLocationAndShops = async () => {
-        if (!isOnline) {
-            setLocation((prev) => ({
-                ...prev,
-                error: "Ви не в мережі. Використовуються кешовані дані.",
-            }));
-            return;
-        }
+    useEffect(() => {
+        fetchLocationAndShops({
+            setLocation,
+            setLoading,
+            setShops,
+            cacheShops,
+            setOfflineMessage,
+            isOnline,
+        });
+    }, [isOnline]);
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    const currentLocation = {
-                        latitude,
-                        longitude,
-                        error: null,
-                    };
-                    setLocation(currentLocation);
-                    setLoading(true);
+    useEffect(() => {
+        const handleOnlineStatus = () => setIsOnline(true);
+        const handleOfflineStatus = () => setIsOnline(false);
 
-                    try {
-                        const response = await fetch(
-                            "http://localhost:8000/location",
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    latitude,
-                                    longitude,
-                                }),
-                            }
-                        );
+        window.addEventListener("online", handleOnlineStatus);
+        window.addEventListener("offline", handleOfflineStatus);
 
-                        if (!response.ok)
-                            throw new Error("Network response was not ok");
-
-                        const data = await response.json();
-
-                        if (data.status === "success") {
-                            const shopsData = data.nearby_shops || [];
-                            setShops(shopsData);
-                            cacheShops(shopsData, { latitude, longitude });
-                            setOfflineMessage("");
-                        }
-                    } catch (error) {
-                        console.error("Error:", error);
-                        const cachedData = localStorage.getItem("cachedShops");
-                        if (cachedData) {
-                            const { shops: cachedShops } =
-                                JSON.parse(cachedData);
-                            if (cachedShops && cachedShops.length > 0) {
-                                setShops(cachedShops);
-                            }
-                        }
-                        setLocation((prev) => ({
-                            ...prev,
-                            error: "Помилка отримання даних. Використовуються кешовані дані.",
-                        }));
-                    } finally {
-                        setLoading(false);
-                    }
-                },
-                (error) => {
-                    setLocation({
-                        latitude: null,
-                        longitude: null,
-                        error: "Дозвольте доступ до геолокації для пошуку магазинів",
-                    });
-                    setLoading(false);
-                }
-            );
-        } else {
-            setLocation({
-                latitude: null,
-                longitude: null,
-                error: "Геолокація не підтримується вашим браузером",
-            });
-        }
-    };
+        return () => {
+            window.removeEventListener("online", handleOnlineStatus);
+            window.removeEventListener("offline", handleOfflineStatus);
+        };
+    }, []);
 
     const handleRefresh = () => {
-        fetchLocationAndShops();
+        fetchLocationAndShops({
+            setLocation,
+            setLoading,
+            setShops,
+            cacheShops,
+            setOfflineMessage,
+            isOnline,
+        });
     };
 
     const toggleStats = () => {
         setShowStats(!showStats);
     };
 
-    useEffect(() => {
-        fetchLocationAndShops();
-    }, []);
-
     return (
         <div className={styles.appContainer}>
-            {!isOnline && (
-                <div className={styles.offlineBanner}>
-                    ⚠️ Ви не в мережі. Використовуються кешовані дані.
-                </div>
-            )}
+            {!isOnline && <OfflineMessage />}
 
             <Sidebar
                 showStats={showStats}
@@ -195,29 +124,14 @@ function App() {
             />
 
             <div className={styles.mainContentWrapper}>
-                <header className={styles.header}>
-                    <h1 className={styles.title}>🔍 Магазини поблизу</h1>
-                    <button
-                        onClick={handleRefresh}
-                        className={styles.refreshButton}
-                    >
-                        Оновити
-                    </button>
-                </header>
+                <Header handleRefresh={handleRefresh} />
 
                 <main className={styles.mainContent}>
                     {location.error ? (
-                        <div className={styles.errorBox}>
-                            <p>🚨 {location.error}</p>
-                            {location.error.includes("Дозвольте доступ") && (
-                                <button
-                                    onClick={handleRefresh}
-                                    className={styles.tryAgainButton}
-                                >
-                                    Спробувати знову
-                                </button>
-                            )}
-                        </div>
+                        <ErrorMessage
+                            error={location.error}
+                            onRetry={handleRefresh}
+                        />
                     ) : (
                         <LocationCard
                             location={location}
@@ -225,29 +139,9 @@ function App() {
                         />
                     )}
 
-                    {loading && (
-                        <div className={styles.loaderContainer}>
-                            <div className={styles.loader}></div>
-                            <p>Шукаємо магазини поблизу...</p>
-                        </div>
-                    )}
+                    {loading && <LoadingMessage />}
 
-                    <section className={styles.shopsSection}>
-                        <h2>🏪 Знайдені магазини</h2>
-                        {shops.length > 0 ? (
-                            <div className={styles.shopGrid}>
-                                {shops.map((shop, index) => (
-                                    <ShopCard shop={shop} index={index} />
-                                ))}
-                            </div>
-                        ) : (
-                            !loading && (
-                                <p className={styles.noShops}>
-                                    На жаль, магазинів поблизу не знайдено 😞
-                                </p>
-                            )
-                        )}
-                    </section>
+                    <ListShops shops={shops} loading={loading} />
                 </main>
             </div>
         </div>

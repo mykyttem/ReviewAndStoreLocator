@@ -1,0 +1,25 @@
+.shopGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+@media (min-width: 600px) {
+    .shopGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .shopGrid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+.noShops {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin-top: 15px;
+}
