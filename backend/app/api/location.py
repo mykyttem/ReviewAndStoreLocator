@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from app.services.google_maps import get_nearby_shops
+from app.services.google_maps import get_nearby_shops, get_place_details
 
 router = APIRouter()
 
@@ -12,8 +12,9 @@ async def receive_location(request: Request):
     if not latitude or not longitude:
         return {"status": "error", "message": "Missing coordinates"}
     
+    # Отримуємо дані про найближчі магазини
     shops_data = await get_nearby_shops(latitude, longitude)
-    
+
     shops = []
     if shops_data.get("results"):
         for place in shops_data["results"]:
@@ -27,15 +28,24 @@ async def receive_location(request: Request):
             if rating and total_reviews > 0:
                 weighted_rating = (total_reviews * rating + C * m) / (total_reviews + C)
             
-            shops.append({
-                "name": place.get("name"),
-                "address": place.get("vicinity"),
-                "rating": rating,
-                "total_reviews": total_reviews,
-                "weighted_rating": weighted_rating,
-                "website": place.get("website"),
-                "location": place.get("geometry", {}).get("location")
-            })
+            place_id = place.get("place_id")
+            if place_id:
+                place_details = await get_place_details(place_id)
+                
+                phone_number = place_details.get("result", {}).get("formatted_phone_number", "N/A")
+                opening_hours = place_details.get("result", {}).get("opening_hours", {}).get("weekday_text", [])
+
+                shops.append({
+                    "name": place.get("name"),
+                    "address": place.get("vicinity"),
+                    "rating": rating,
+                    "total_reviews": total_reviews,
+                    "weighted_rating": weighted_rating,
+                    "website": place.get("website"),
+                    "location": place.get("geometry", {}).get("location"),
+                    "phone_number": phone_number,
+                    "opening_hours": opening_hours
+                })
     
     shops.sort(key=lambda x: x.get("weighted_rating", 0), reverse=True)
     

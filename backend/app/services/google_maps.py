@@ -23,11 +23,17 @@ async def get_place_details(place_id: str):
         response = await client.get(url, params=params)
         data = response.json()
         
-        cache[place_id] = {
-            'data': data,
-            'expiry': datetime.now() + timedelta(hours=1)
-        }
-        
+        if data.get("status") == "OK":
+            cache[place_id] = {
+                'data': data,
+                'expiry': datetime.now() + timedelta(hours=1)
+            }
+        else:
+            cache[place_id] = {
+                'data': {},
+                'expiry': datetime.now() + timedelta(hours=1)
+            }
+
         return data
 
 async def get_nearby_shops(latitude: float, longitude: float, radius: int = 500):
@@ -48,10 +54,16 @@ async def get_nearby_shops(latitude: float, longitude: float, radius: int = 500)
     async with httpx.AsyncClient() as client:
         response = await client.get(url, params=params)
         data = response.json()
-        
-        cache[cache_key] = {
-            'data': data,
-            'expiry': datetime.now() + timedelta(minutes=30)
-        }
-        
+
+        if data.get("status") == "OK":
+            cache[cache_key] = {
+                'data': data,
+                'expiry': datetime.now() + timedelta(minutes=30)
+            }
+        else:
+            cache[cache_key] = {
+                'data': {},
+                'expiry': datetime.now() + timedelta(minutes=30)
+            }
+
         return data

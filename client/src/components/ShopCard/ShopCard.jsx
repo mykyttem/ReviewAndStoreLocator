@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import ShopCardStyles from "./ShopCard.module.css";
+import ShopCardModal from "./Modal/ShopCardModal";
 
 export default function ShopCard({ shop, index }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
     return (
         <div key={index} className={ShopCardStyles.shopCard}>
             <h3>{shop.name}</h3>
@@ -11,9 +17,7 @@ export default function ShopCard({ shop, index }) {
                 <div className={ShopCardStyles.rating}>
                     <span>Рейтинг: </span>
                     <span className={ShopCardStyles.ratingStars}>
-                        {Array.from({
-                            length: 5,
-                        }).map((_, i) => (
+                        {Array.from({ length: 5 }).map((_, i) => (
                             <span
                                 key={i}
                                 className={
@@ -44,11 +48,12 @@ export default function ShopCard({ shop, index }) {
             {shop.opening_hours && (
                 <div className={ShopCardStyles.openingHours}>
                     <h4>Години роботи:</h4>
-                    <ul>
-                        {shop.opening_hours.map((hour, i) => (
-                            <li key={i}>{hour}</li>
-                        ))}
-                    </ul>
+                    <button
+                        onClick={openModal}
+                        className={ShopCardStyles.openModalBtn}
+                    >
+                        Переглянути розклад
+                    </button>
                 </div>
             )}
 
@@ -88,6 +93,12 @@ export default function ShopCard({ shop, index }) {
                     </a>
                 )}
             </div>
+
+            <ShopCardModal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                shop={shop}
+            />
         </div>
     );
 }
