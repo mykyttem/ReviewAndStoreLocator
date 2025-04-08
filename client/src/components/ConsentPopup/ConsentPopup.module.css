@@ -1,0 +1,40 @@
+.consentPopup {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.consentContent {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.consentContent p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.consentContent a {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.consentContent button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

@@ -8,6 +8,8 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadingMessage from "./components/LoadingMessage/LoadingMessage";
 import Header from "./components/Header/Header";
 import ListShops from "./components/ListShops/ListShops";
+import fetchTrackVisit from "./api/fetchTrackVisit";
+import ConsentPopup from "./components/ConsentPopup/ConsentPopup";
 
 function App() {
     const [location, setLocation] = useState({
@@ -21,24 +23,19 @@ function App() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [offlineMessage, setOfflineMessage] = useState("");
 
+    const [consentGiven, setConsentGiven] = useState(() => {
+        return localStorage.getItem("consentGiven") === "true";
+    });
+    const [showConsentPopup, setShowConsentPopup] = useState(!consentGiven);
+
     useEffect(() => {
         const cachedData = localStorage.getItem("cachedShops");
         if (cachedData) {
             try {
-                const {
-                    shops: cachedShops,
-                    timestamp,
-                    location: cachedLocation,
-                } = JSON.parse(cachedData);
+                const { shops: cachedShops, timestamp } =
+                    JSON.parse(cachedData);
                 if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
                     setShops(cachedShops);
-                    if (cachedLocation) {
-                        setLocation((prev) => ({
-                            ...prev,
-                            latitude: cachedLocation.latitude,
-                            longitude: cachedLocation.longitude,
-                        }));
-                    }
                     setOfflineMessage(
                         "Використовуються кешовані дані (останнє оновлення: " +
                             new Date(timestamp).toLocaleString() +
@@ -51,10 +48,9 @@ function App() {
         }
     }, []);
 
-    const cacheShops = (shopsData, loc) => {
+    const cacheShops = (shopsData) => {
         const cacheData = {
             shops: shopsData,
-            location: loc,
             timestamp: Date.now(),
         };
         localStorage.setItem("cachedShops", JSON.stringify(cacheData));
@@ -83,6 +79,14 @@ function App() {
             isOnline,
         });
     }, [isOnline]);
+
+    useEffect(() => {
+        if (consentGiven) {
+            fetchTrackVisit({}).catch((error) => {
+                console.error("Failed to track visit:", error);
+            });
+        }
+    }, [consentGiven]);
 
     useEffect(() => {
         const handleOnlineStatus = () => setIsOnline(true);
@@ -144,6 +148,12 @@ function App() {
                     <ListShops shops={shops} loading={loading} />
                 </main>
             </div>
+
+            <ConsentPopup
+                showConsentPopup={showConsentPopup}
+                setConsentGiven={setConsentGiven}
+                setShowConsentPopup={setShowConsentPopup}
+            />
         </div>
     );
 }

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.location import router as location_router
+from app.api.track_visit import router as track_visit_router
 
 app = FastAPI()
 
@@ -12,3 +13,4 @@ app.add_middleware(
 )
 
 app.include_router(location_router)
+app.include_router(track_visit_router)
