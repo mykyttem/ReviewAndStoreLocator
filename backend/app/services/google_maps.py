@@ -67,3 +67,30 @@ async def get_nearby_shops(latitude: float, longitude: float, radius: int = 500)
             }
 
         return data
+
+
+async def get_shops_with_map_links(latitude: float, longitude: float):
+    shops_data = await get_nearby_shops(latitude, longitude)
+    shops = []
+    
+    if "results" in shops_data:
+        for place in shops_data["results"]:
+            place_id = place.get("place_id")
+            if place_id:
+                place_details = await get_place_details(place_id)
+                location = place.get("geometry", {}).get("location", {})
+                place_id = place.get("place_id")
+
+                shops.append({
+                    "name": place.get("name"),
+                    "address": place.get("vicinity", "N/A"),
+                    "rating": place.get("rating"),
+                    "total_reviews": place.get("user_ratings_total", 0),
+                    "place_id": place_id,
+                    "location": location,
+                    "opening_hours": place_details.get("result", {}).get("opening_hours", {}).get("weekday_text", []),
+                    "phone_number": place_details.get("result", {}).get("formatted_phone_number", "N/A")
+                })
+
+
+    return shops

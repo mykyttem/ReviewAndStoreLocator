@@ -58,15 +58,17 @@ export default function ShopCard({ shop, index }) {
             )}
 
             <div className={ShopCardStyles.linksContainer}>
-                {shop.location && (
+                {shop.location ? (
                     <a
-                        href={`https://www.google.com/maps?q=${shop.location.lat},${shop.location.lng}`}
+                        href={`${shop.map_url}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={ShopCardStyles.mapLink}
                     >
                         Відкрити на мапі
                     </a>
+                ) : (
+                    <p>Локація не надана.</p>
                 )}
 
                 {shop.website && (
@@ -74,7 +76,7 @@ export default function ShopCard({ shop, index }) {
                         href={
                             shop.website.startsWith("http")
                                 ? shop.website
-                                : `https://${shop.website}`
+                                : `https://${shop.map_url}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"

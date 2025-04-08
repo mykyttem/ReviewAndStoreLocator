@@ -20,7 +20,7 @@ async def receive_location(request: Request):
         for place in shops_data["results"]:
             rating = place.get("rating")
             total_reviews = place.get("user_ratings_total", 0)
-            
+
             C = 3
             m = 3.5
             weighted_rating = 0
@@ -35,13 +35,27 @@ async def receive_location(request: Request):
                 phone_number = place_details.get("result", {}).get("formatted_phone_number", "N/A")
                 opening_hours = place_details.get("result", {}).get("opening_hours", {}).get("weekday_text", [])
 
+                shop_lat = place.get("geometry", {}).get("location", {}).get("lat")
+                shop_lng = place.get("geometry", {}).get("location", {}).get("lng")
+                place_id = place.get("place_id")
+
+                map_url = None
+                if place_id:
+                    map_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
+                elif shop_lat and shop_lng:
+                    if isinstance(shop_lat, float) and isinstance(shop_lng, float):
+                        map_url = f"https://www.google.com/maps?q={shop_lat},{shop_lng}"
+                    else:
+                        print("Invalid latitude or longitude values")
+
+
                 shops.append({
                     "name": place.get("name"),
                     "address": place.get("vicinity"),
                     "rating": rating,
                     "total_reviews": total_reviews,
                     "weighted_rating": weighted_rating,
-                    "website": place.get("website"),
+                    "map_url": map_url,
                     "location": place.get("geometry", {}).get("location"),
                     "phone_number": phone_number,
                     "opening_hours": opening_hours
