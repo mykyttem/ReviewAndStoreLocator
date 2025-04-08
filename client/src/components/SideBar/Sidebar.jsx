@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import SideBarStyles from "./Sidebar.module.css";
+import SupportModal from "./Modal/SupportModal";
 
 export default function Sidebar({
     showStats,
@@ -7,6 +8,8 @@ export default function Sidebar({
     handleRefresh,
     shopsStats,
 }) {
+    const [showSupportModal, setShowSupportModal] = useState(false);
+
     return (
         <nav className={SideBarStyles.sidebar}>
             <div className={SideBarStyles.sidebarHeader}>
@@ -29,6 +32,14 @@ export default function Sidebar({
                         className={SideBarStyles.menuButton}
                     >
                         🔄 Оновити дані
+                    </button>
+                </li>
+                <li>
+                    <button
+                        onClick={() => setShowSupportModal(true)}
+                        className={SideBarStyles.menuButton}
+                    >
+                        💬 Техпідтримка
                     </button>
                 </li>
             </ul>
@@ -61,6 +72,11 @@ export default function Sidebar({
                     </div>
                 )}
             </div>
+
+            <SupportModal
+                isOpen={showSupportModal}
+                onClose={() => setShowSupportModal(false)}
+            />
         </nav>
     );
 }
