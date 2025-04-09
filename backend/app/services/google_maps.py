@@ -36,6 +36,7 @@ async def get_place_details(place_id: str):
 
         return data
 
+
 async def get_nearby_shops(latitude: float, longitude: float, radius: int = 500):
     cache_key = f"{latitude},{longitude}"
     
@@ -94,3 +95,20 @@ async def get_shops_with_map_links(latitude: float, longitude: float):
 
 
     return shops
+
+
+async def geocode_place_name(place_name: str):
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        "address": place_name,
+        "key": GOOGLE_API_KEY
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, params=params)
+        data = response.json()
+        if data["status"] == "OK" and data["results"]:
+            location = data["results"][0]["geometry"]["location"]
+            return location
+        else:
+            return None

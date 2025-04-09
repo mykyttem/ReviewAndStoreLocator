@@ -10,6 +10,7 @@ import Header from "./components/Header/Header";
 import ListShops from "./components/ListShops/ListShops";
 import fetchTrackVisit from "./api/fetchTrackVisit";
 import ConsentPopup from "./components/ConsentPopup/ConsentPopup";
+import { searchByPlaceName } from "./api/fetchSearchByPlaceName";
 
 function App() {
     const [location, setLocation] = useState({
@@ -56,13 +57,16 @@ function App() {
         localStorage.setItem("cachedShops", JSON.stringify(cacheData));
     };
 
+    const isShopsArray = Array.isArray(shops);
+
     const shopsStats = {
-        total: shops.length,
-        averageRating:
-            shops.reduce((sum, shop) => sum + (shop.rating || 0), 0) /
-            (shops.length || 1),
+        total: isShopsArray ? shops.length : 0,
+        averageRating: isShopsArray
+            ? shops.reduce((sum, shop) => sum + (shop.rating || 0), 0) /
+              (shops.length || 1)
+            : 0,
         topRated:
-            shops.length > 0
+            isShopsArray && shops.length > 0
                 ? [...shops].sort(
                       (a, b) => (b.rating || 0) - (a.rating || 0)
                   )[0]
@@ -116,6 +120,17 @@ function App() {
         setShowStats(!showStats);
     };
 
+    const handleSearchPlace = (placeName) => {
+        searchByPlaceName(placeName, {
+            setLocation,
+            setLoading,
+            setShops,
+            cacheShops,
+            setOfflineMessage,
+            isOnline,
+        });
+    };
+
     return (
         <div className={styles.appContainer}>
             {!isOnline && <OfflineMessage />}
@@ -128,7 +143,10 @@ function App() {
             />
 
             <div className={styles.mainContentWrapper}>
-                <Header handleRefresh={handleRefresh} />
+                <Header
+                    handleRefresh={handleRefresh}
+                    onSearchPlace={handleSearchPlace}
+                />
 
                 <main className={styles.mainContent}>
                     {location.error ? (
