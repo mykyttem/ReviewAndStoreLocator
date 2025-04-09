@@ -1,12 +1,15 @@
+from datetime import datetime
 from fastapi import APIRouter, Request
 from app.services.firebase.firebase_config import db
-from datetime import datetime
+from app.utils.check_csrf import check_csrf_token
 
 router = APIRouter()
 
 @router.post("/support-message")
 async def support_message(request: Request):
     try:
+        check_csrf_token(request)
+
         data = await request.json()
         name = data.get("name")
         contact = data.get("contact")

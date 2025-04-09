@@ -1,9 +1,14 @@
+import { getCsrfToken } from "./fetchCsrfToken";
+
 export default async function fetchTrackVisit() {
     try {
+        const csrfToken = await getCsrfToken();
+
         const response = await fetch("http://localhost:8000/track-visit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
             },
             body: JSON.stringify({}),
         });

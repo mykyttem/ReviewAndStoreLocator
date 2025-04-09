@@ -1,3 +1,5 @@
+import { getCsrfToken } from "./fetchCsrfToken";
+
 export default async function fetchLocationAndShops({
     setLocation,
     setLoading,
@@ -27,12 +29,15 @@ export default async function fetchLocationAndShops({
                 setLoading(true);
 
                 try {
+                    const csrfToken = await getCsrfToken();
+
                     const response = await fetch(
                         "http://localhost:8000/location",
                         {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
+                                "X-CSRF-Token": csrfToken,
                             },
                             body: JSON.stringify({
                                 latitude,

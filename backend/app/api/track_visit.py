@@ -1,14 +1,17 @@
 import hashlib
-from fastapi import APIRouter, Request
-from app.services.firebase.firebase_config import db
 from datetime import datetime
+from fastapi import APIRouter, Request
 from user_agents import parse
+from app.services.firebase.firebase_config import db
+from app.utils.check_csrf import check_csrf_token
 
 router = APIRouter()
 
 @router.post("/track-visit")
 async def track_visit(request: Request):
     try:
+        check_csrf_token(request)
+
         user_agent = request.headers.get("User-Agent", "unknown")
         ua = parse(user_agent)
         current_date = datetime.now().strftime('%Y-%m-%d')
