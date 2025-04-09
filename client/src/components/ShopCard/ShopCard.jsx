@@ -13,6 +13,20 @@ export default function ShopCard({ shop, index }) {
             <h3>{shop.name}</h3>
             <p className={ShopCardStyles.address}>{shop.address}</p>
 
+            {/* Відображення фото магазинів */}
+            {shop.photos && shop.photos.length > 0 && (
+                <div className={ShopCardStyles.photos}>
+                    {shop.photos.map((photoUrl, idx) => (
+                        <img
+                            key={idx}
+                            src={photoUrl}
+                            alt={`Photo of ${shop.name}`}
+                            className={ShopCardStyles.shopPhoto}
+                        />
+                    ))}
+                </div>
+            )}
+
             {shop.rating && (
                 <div className={ShopCardStyles.rating}>
                     <span>Рейтинг: </span>

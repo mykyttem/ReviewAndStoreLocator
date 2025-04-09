@@ -55,3 +55,16 @@
 .mapLink:hover {
     text-decoration: underline;
 }
+
+.shopPhoto {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.photos {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}

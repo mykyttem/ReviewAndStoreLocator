@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from app.services.google_maps import get_nearby_shops, geocode_place_name, get_place_details
+from app.services.get_place_photo import get_place_photos
 
 
 router = APIRouter()
@@ -51,6 +52,13 @@ async def search_by_place(request: Request):
             elif shop_lat and shop_lng:
                 map_url = f"https://www.google.com/maps?q={shop_lat},{shop_lng}"
 
+            photos = []
+            if place.get("photos"):
+                for photo in place["photos"]:
+                    photo_reference = photo.get("photo_reference")
+                    if photo_reference:
+                        photos.append(await get_place_photos(photo_reference))
+
             shops.append({
                 "name": place.get("name"),
                 "address": place.get("vicinity"),
@@ -60,7 +68,8 @@ async def search_by_place(request: Request):
                 "map_url": map_url,
                 "location": place.get("geometry", {}).get("location"),
                 "phone_number": phone_number,
-                "opening_hours": opening_hours
+                "opening_hours": opening_hours,
+                "photos": photos,
             })
 
     shops.sort(key=lambda x: x.get("weighted_rating", 0), reverse=True)
