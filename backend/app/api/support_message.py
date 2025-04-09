@@ -2,10 +2,12 @@ from datetime import datetime
 from fastapi import APIRouter, Request
 from app.services.firebase.firebase_config import db
 from app.utils.check_csrf import check_csrf_token
+from app.utils.slowapi_set import limiter
 
 router = APIRouter()
 
 @router.post("/support-message")
+@limiter.limit("5/minute")
 async def support_message(request: Request):
     try:
         check_csrf_token(request)

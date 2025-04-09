@@ -4,10 +4,12 @@ from fastapi import APIRouter, Request
 from user_agents import parse
 from app.services.firebase.firebase_config import db
 from app.utils.check_csrf import check_csrf_token
+from app.utils.slowapi_set import limiter
 
 router = APIRouter()
 
 @router.post("/track-visit")
+@limiter.limit("5/minute")
 async def track_visit(request: Request):
     try:
         check_csrf_token(request)

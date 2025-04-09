@@ -2,11 +2,13 @@ from fastapi import APIRouter, Request
 from app.services.google_maps import get_nearby_shops, geocode_place_name, get_place_details
 from app.services.get_place_photo import get_place_photos
 from app.utils.check_csrf import check_csrf_token
+from app.utils.slowapi_set import limiter
 
 router = APIRouter()
 
 
 @router.post("/search_by_place")
+@limiter.limit("5/minute")
 async def search_by_place(request: Request):
     check_csrf_token(request)
 
