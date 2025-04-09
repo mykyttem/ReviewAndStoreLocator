@@ -2,7 +2,7 @@ FROM node:23 AS build
 
 WORKDIR /app
 
-COPY package.json .
+COPY client/package.json .
 #COPY package-lock.json .
 
 RUN npm install
