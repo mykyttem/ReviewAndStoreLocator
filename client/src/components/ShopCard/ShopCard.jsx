@@ -20,7 +20,7 @@ export default function ShopCard({ shop, index }) {
                         <img
                             key={idx}
                             src={photoUrl}
-                            alt={`Photo of ${shop.name}`}
+                            alt={`${shop.name} product`}
                             className={ShopCardStyles.shopPhoto}
                         />
                     ))}
