@@ -32,7 +32,7 @@ export default async function fetchLocationAndShops({
                     const csrfToken = await getCsrfToken();
 
                     const response = await fetch(
-                        "/location",
+                        "/api/location",
                         {
                             method: "POST",
                             headers: {

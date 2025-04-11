@@ -15,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(location_router)
-app.include_router(track_visit_router)
-app.include_router(support_message_router)
-app.include_router(search_by_place_router)
-app.include_router(csrf_token)
+app.include_router(location_router, prefix="/api")
+app.include_router(track_visit_router, prefix="/api")
+app.include_router(support_message_router, prefix="/api")
+app.include_router(search_by_place_router, prefix="/api")
+app.include_router(csrf_token, prefix="/api")

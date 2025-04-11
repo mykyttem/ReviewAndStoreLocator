@@ -4,7 +4,7 @@ export default async function fetchTrackVisit() {
     try {
         const csrfToken = await getCsrfToken();
 
-        const response = await fetch("/track-visit", {
+        const response = await fetch("/api/track-visit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
