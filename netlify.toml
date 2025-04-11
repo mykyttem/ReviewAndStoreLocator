@@ -4,5 +4,6 @@
   publish = "build"
 
 [[redirects]]
-  to = "https://reviewandstorelocator.onrender.com/api/:splat"
+  from = "/api/*"
+  to = "https://reviewandstorelocator.onrender.com/:splat"
   status = 200
