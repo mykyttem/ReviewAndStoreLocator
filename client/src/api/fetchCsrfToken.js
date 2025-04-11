@@ -1,6 +1,6 @@
 export async function getCsrfToken() {
     try {
-        const response = await fetch("http://localhost:8000/csrf-token");
+        const response = await fetch("/csrf-token");
 
         if (!response.ok) {
             throw new Error("Failed to fetch CSRF token");

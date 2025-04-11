@@ -32,7 +32,7 @@ export async function searchByPlaceName(
     try {
         const csrfToken = await getCsrfToken();
 
-        const response = await fetch("http://localhost:8000/search_by_place", {
+        const response = await fetch("/search_by_place", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
