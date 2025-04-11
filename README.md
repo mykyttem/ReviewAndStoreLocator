@@ -2,10 +2,14 @@
 
 ## Launch
 
+## Prod
+
 ```
 docker-compose up --build
 ```
 
-# TODO
+## Dev
 
-подробна інфомраці о відгуках
+```
+docker-compose -f docker-compose.dev.yml up --build
+```

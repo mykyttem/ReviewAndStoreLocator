@@ -9,15 +9,23 @@ services:
         networks:
             - app-network
         restart: unless-stopped
+        volumes:
+            - ./backend:/app
 
     frontend:
         build:
             context: ./client
         ports:
-            - "80:80"
+            - "3000:3000"
         networks:
             - app-network
         restart: unless-stopped
+        volumes:
+            - ./client:/app
+            - /app/node_modules
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+            - WATCHPACK_POLLING=true
 
 networks:
     app-network:

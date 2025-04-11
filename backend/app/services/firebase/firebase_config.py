@@ -1,20 +1,37 @@
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore
+from pathlib import Path
 
-cert_path = '/etc/secrets/crf.json'
+"""
+Depending on whether it is production or development, 
+it will automatically search for the file in the right place
+"""
 
-if not os.path.exists(cert_path):
-    print(f"file '{cert_path}' not found!")
-    exit(1)
+CERT_PATHS = [
+    # for prod
+    '/etc/secrets/crf.json',  
+    '/run/secrets/firebase_cert',  
+    
+    # for dev
+    str(Path(__file__).parent.parent / 'firebase' / 'crf.json'),
+    'crf.json',
+]
 
-try:
+
+def init_firebase():
+    cert_path = None
+    for path in CERT_PATHS:
+        if os.path.exists(path):
+            cert_path = path
+            break
+
+    if not cert_path:
+        raise FileNotFoundError("Firebase certificate not found in any of: " + ", ".join(CERT_PATHS))
+
     cred = credentials.Certificate(cert_path)
     firebase_admin.initialize_app(cred)
+    return firestore.client()
 
-    db = firestore.client()
 
-    print("Firebase has been successfully initialized.")
-except Exception as e:
-    print(f"Error during Firebase initialization: {e}")
-    exit(1)
+db = init_firebase()
