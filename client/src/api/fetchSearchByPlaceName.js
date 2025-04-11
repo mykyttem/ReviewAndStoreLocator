@@ -1,5 +1,3 @@
-import { getCsrfToken } from "./fetchCsrfToken";
-
 export async function searchByPlaceName(
     placeName,
     {
@@ -30,13 +28,10 @@ export async function searchByPlaceName(
     setLoading(true);
 
     try {
-        const csrfToken = await getCsrfToken();
-
         const response = await fetch("/api/search_by_place", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({ place: placeName }),
         });

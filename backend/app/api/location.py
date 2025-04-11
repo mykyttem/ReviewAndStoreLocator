@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Request
 from app.services.google_maps import get_nearby_shops, get_place_details
-from app.utils.check_csrf import check_csrf_token
 from app.utils.slowapi_set import limiter
 
 router = APIRouter()
@@ -8,8 +7,6 @@ router = APIRouter()
 @router.post("/location")
 @limiter.limit("5/minute")
 async def receive_location(request: Request):
-    check_csrf_token(request)
-
     data = await request.json()
     latitude = data.get("latitude")
     longitude = data.get("longitude")
