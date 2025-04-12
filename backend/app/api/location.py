@@ -14,7 +14,7 @@ async def receive_location(request: Request):
     if not latitude or not longitude:
         return {"status": "error", "message": "Missing coordinates"}
     
-    # Отримуємо дані про найближчі магазини
+    # Get information about the nearest stores
     shops_data = await get_nearby_shops(latitude, longitude)
 
     shops = []
