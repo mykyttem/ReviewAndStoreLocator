@@ -67,6 +67,5 @@ async def receive_location(request: Request):
     
     return {
         "status": "success",
-        "user_location": {"latitude": latitude, "longitude": longitude},
         "nearby_shops": shops
     }
