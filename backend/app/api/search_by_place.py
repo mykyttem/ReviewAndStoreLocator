@@ -60,6 +60,9 @@ async def search_by_place(request: Request):
                     if photo_reference:
                         photos.append(await get_place_photos(photo_reference))
 
+            categories = place.get("types", [])
+            primary_category = categories[0] if categories else "other"
+
             shops.append({
                 "name": place.get("name"),
                 "address": place.get("vicinity"),
@@ -71,6 +74,8 @@ async def search_by_place(request: Request):
                 "phone_number": phone_number,
                 "opening_hours": opening_hours,
                 "photos": photos,
+                "category": primary_category,
+                "categories": categories,
             })
 
     shops.sort(key=lambda x: x.get("weighted_rating", 0), reverse=True)

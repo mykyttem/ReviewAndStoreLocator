@@ -13,7 +13,6 @@ export default function ShopCard({ shop, index }) {
             <h3>{shop.name}</h3>
             <p className={ShopCardStyles.address}>{shop.address}</p>
 
-            {/* Відображення фото магазинів */}
             {shop.photos && shop.photos.length > 0 && (
                 <div className={ShopCardStyles.photos}>
                     {shop.photos.map((photoUrl, idx) => (
@@ -56,6 +55,13 @@ export default function ShopCard({ shop, index }) {
                             {shop.weighted_rating?.toFixed(2) || "н/д"}
                         </span>
                     </div>
+                    {shop.category && (
+                        <div className={ShopCardStyles.category}>
+                            <span className={ShopCardStyles.categoryBadge}>
+                                {shop.category}
+                            </span>
+                        </div>
+                    )}
                 </div>
             )}
 
