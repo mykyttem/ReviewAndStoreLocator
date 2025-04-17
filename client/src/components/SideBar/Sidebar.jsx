@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import SideBarStyles from "./Sidebar.module.css";
 import SupportModal from "./Modal/SupportModal";
+import {
+    FiBarChart2,
+    FiRefreshCw,
+    FiMessageSquare,
+    FiChevronDown,
+    FiChevronUp,
+    FiCheck,
+    FiAlertTriangle,
+} from "react-icons/fi";
 
 export default function Sidebar({
     showStats,
@@ -9,12 +18,57 @@ export default function Sidebar({
     shopsStats,
 }) {
     const [showSupportModal, setShowSupportModal] = useState(false);
+    const [refreshStatus, setRefreshStatus] = useState({
+        loading: false,
+        success: false,
+        error: false,
+        message: "",
+    });
+
+    const handleRefreshWithStatus = async () => {
+        setRefreshStatus({
+            loading: true,
+            success: false,
+            error: false,
+            message: "Оновлення даних...",
+        });
+
+        try {
+            await new Promise((resolve) => {
+                handleRefresh();
+                setTimeout(resolve, 1500);
+            });
+
+            setRefreshStatus({
+                loading: false,
+                success: true,
+                error: false,
+                message: "Дані успішно оновлено!",
+            });
+
+            setTimeout(() => {
+                setRefreshStatus((prev) => ({
+                    ...prev,
+                    success: false,
+                    message: "",
+                }));
+            }, 3000);
+        } catch (error) {
+            setRefreshStatus({
+                loading: false,
+                success: false,
+                error: true,
+                message: "Помилка оновлення",
+            });
+        }
+    };
 
     return (
         <nav className={SideBarStyles.sidebar}>
             <div className={SideBarStyles.sidebarHeader}>
-                <h3>Меню</h3>
+                <h3>Analytics Dashboard</h3>
             </div>
+
             <ul className={SideBarStyles.sidebarMenu}>
                 <li>
                     <button
@@ -23,23 +77,58 @@ export default function Sidebar({
                             showStats ? SideBarStyles.active : ""
                         }`}
                     >
-                        📊 Статистика
+                        <FiBarChart2 className={SideBarStyles.icon} />
+                        <span>Статистика</span>
+                        {showStats ? (
+                            <FiChevronUp className={SideBarStyles.chevron} />
+                        ) : (
+                            <FiChevronDown className={SideBarStyles.chevron} />
+                        )}
                     </button>
                 </li>
                 <li>
                     <button
-                        onClick={handleRefresh}
+                        onClick={handleRefreshWithStatus}
                         className={SideBarStyles.menuButton}
+                        disabled={refreshStatus.loading}
                     >
-                        🔄 Оновити дані
+                        <div className={SideBarStyles.refreshContainer}>
+                            {refreshStatus.loading ? (
+                                <div className={SideBarStyles.spinner}></div>
+                            ) : (
+                                <FiRefreshCw className={SideBarStyles.icon} />
+                            )}
+                            <span>Оновити дані</span>
+                        </div>
                     </button>
+                    {refreshStatus.message && (
+                        <div
+                            className={`${SideBarStyles.refreshStatus} ${
+                                refreshStatus.error
+                                    ? SideBarStyles.error
+                                    : refreshStatus.success
+                                    ? SideBarStyles.success
+                                    : ""
+                            }`}
+                        >
+                            {refreshStatus.success ? (
+                                <FiCheck className={SideBarStyles.statusIcon} />
+                            ) : refreshStatus.error ? (
+                                <FiAlertTriangle
+                                    className={SideBarStyles.statusIcon}
+                                />
+                            ) : null}
+                            {refreshStatus.message}
+                        </div>
+                    )}
                 </li>
                 <li>
                     <button
                         onClick={() => setShowSupportModal(true)}
                         className={SideBarStyles.menuButton}
                     >
-                        💬 Техпідтримка
+                        <FiMessageSquare className={SideBarStyles.icon} />
+                        <span>Техпідтримка</span>
                     </button>
                 </li>
             </ul>
@@ -60,6 +149,7 @@ export default function Sidebar({
                     <span>Середній рейтинг:</span>
                     <span className={SideBarStyles.statValue}>
                         {shopsStats.averageRating.toFixed(1)}
+                        <span className={SideBarStyles.ratingStar}>★</span>
                     </span>
                 </div>
                 {shopsStats.topRated && (
