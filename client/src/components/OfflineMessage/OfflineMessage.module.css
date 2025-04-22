@@ -1,10 +1,38 @@
 .offlineBanner {
-    background-color: #fff3cd;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
     color: #856404;
-    padding: 10px 15px;
+    padding: 12px 15px;
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 101;
-    border-bottom: 1px solid #ffeeba;
+    border-bottom: none;
+    box-shadow: 0 2px 10px rgba(133, 100, 4, 0.1);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.offlineBanner:hover {
+    background: linear-gradient(135deg, #ffeeba 0%, #ffea9e 100%);
+    box-shadow: 0 3px 12px rgba(133, 100, 4, 0.15);
+}
+
+.offlineBanner::before {
+    content: "⚠";
+    font-size: 1.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .offlineBanner {
+        background: linear-gradient(135deg, #3a2f00 0%, #5a4a00 100%);
+        color: #ffdf7e;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
 }
