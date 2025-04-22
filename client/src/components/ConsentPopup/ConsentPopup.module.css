@@ -1,40 +1,116 @@
 .consentPopup {
     position: fixed;
     bottom: 20px;
-    left: 20px;
-    right: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    padding: 20px;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    max-width: 500px;
-    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    max-width: 520px;
+    width: calc(100% - 40px);
+    border: none;
+    animation: slideUp 0.4s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        bottom: -100px;
+        opacity: 0;
+    }
+    to {
+        bottom: 20px;
+        opacity: 1;
+    }
 }
 
 .consentContent {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .consentContent p {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #334155;
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 .consentContent a {
-    color: #007bff;
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.consentContent a:hover {
+    color: #2563eb;
     text-decoration: underline;
 }
 
+.consentActions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .consentContent button {
-    align-self: flex-start;
-    padding: 8px 16px;
-    background-color: #2e7d32;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 120px;
+}
+
+.consentContent button:first-child {
+    background-color: #3b82f6;
     color: white;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
+}
+
+.consentContent button:first-child:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.consentContent button:last-child {
+    background-color: transparent;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.consentContent button:last-child:hover {
+    background-color: #f8fafc;
+    color: #334155;
+}
+
+@media (prefers-color-scheme: dark) {
+    .consentPopup {
+        background: #1e293b;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .consentContent p {
+        color: #e2e8f0;
+    }
+
+    .consentContent a {
+        color: #60a5fa;
+    }
+
+    .consentContent button:last-child {
+        border-color: #334155;
+        color: #94a3b8;
+    }
+
+    .consentContent button:last-child:hover {
+        background-color: #334155;
+        color: #f1f5f9;
+    }
 }
