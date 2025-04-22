@@ -1,31 +1,93 @@
 .errorBox {
-    background-color: #ffecec;
-    color: #e74c3c;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    border-left: 3px solid #e74c3c;
-    font-size: 0.9rem;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffebeb 100%);
+    color: #dc2626;
+    padding: 16px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
+    position: relative;
+    overflow: hidden;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.errorBox::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #ef4444, #dc2626);
+    border-radius: 4px 0 0 4px;
+}
+
+.errorBox::after {
+    content: "⚠";
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    font-size: 1.2rem;
+    opacity: 0.2;
 }
 
 .refreshButton,
 .tryAgainButton {
-    background-color: #3498db;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
 .refreshButton:hover,
 .tryAgainButton:hover {
-    background-color: #2980b9;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
-.tryAgainButton {
-    margin-top: 10px;
+.refreshButton:active,
+.tryAgainButton:active {
+    transform: translateY(0);
+}
+
+.refreshButton::before,
+.tryAgainButton::before {
+    content: "🔄";
+    font-size: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .errorBox {
+        background: linear-gradient(135deg, #2b0b0b 0%, #3a0a0a 100%);
+        color: #fca5a5;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+    }
+
+    .errorBox::before {
+        background: linear-gradient(to bottom, #f87171, #ef4444);
+    }
+
+    .refreshButton,
+    .tryAgainButton {
+        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);
+    }
+
+    .refreshButton:hover,
+    .tryAgainButton:hover {
+        background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+    }
 }
