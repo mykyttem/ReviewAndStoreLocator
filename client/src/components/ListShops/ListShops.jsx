@@ -11,11 +11,10 @@ export default function ListShops({ shops, loading }) {
         if (isShopsArray && shops.length > 0) {
             const allCategories = shops
                 .map((shop) => shop.category)
-                .filter((category) => category)
+                .filter(Boolean)
                 .filter(
                     (category, index, self) => self.indexOf(category) === index
                 );
-
             setCategories(allCategories);
         } else {
             setCategories([]);
@@ -59,23 +58,26 @@ export default function ListShops({ shops, loading }) {
                 </div>
             )}
 
-            {isShopsArray && filteredShops.length > 0 ? (
-                <div className={ListShopsStyles.shopGrid}>
-                    {filteredShops.map((shop, index) => (
-                        <ShopCard key={index} shop={shop} />
-                    ))}
-                </div>
-            ) : (
-                !loading && (
-                    <p className={ListShopsStyles.noShops}>
-                        На жаль, магазинів{" "}
-                        {selectedCategory
-                            ? `з категорією "${selectedCategory}"`
-                            : ""}{" "}
-                        поблизу не знайдено 😞
-                    </p>
-                )
-            )}
+            <div className={ListShopsStyles.shopGrid}>
+                {isShopsArray && filteredShops.length > 0
+                    ? filteredShops.map((shop, index) => (
+                          <div
+                              key={shop.id || index}
+                              className={ListShopsStyles.shopCard}
+                          >
+                              <ShopCard shop={shop} />
+                          </div>
+                      ))
+                    : !loading && (
+                          <p className={ListShopsStyles.noShops}>
+                              На жаль, магазинів{" "}
+                              {selectedCategory
+                                  ? `з категорією "${selectedCategory}"`
+                                  : ""}{" "}
+                              поблизу не знайдено 😞
+                          </p>
+                      )}
+            </div>
         </section>
     );
 }
