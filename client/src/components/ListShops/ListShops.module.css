@@ -23,3 +23,41 @@
     font-size: 1rem;
     margin-top: 15px;
 }
+
+.categoryFilters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0 0 20px 0;
+    padding: 10px 0;
+}
+
+.categoryFilters button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: #333;
+}
+
+.categoryFilters button:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.activeFilter {
+    background: #007bff !important;
+    color: white !important;
+    border-color: #007bff !important;
+    font-weight: 500;
+}
+
+.shopsSection {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
