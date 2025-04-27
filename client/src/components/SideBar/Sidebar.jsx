@@ -9,13 +9,16 @@ import {
     FiChevronUp,
     FiCheck,
     FiAlertTriangle,
+    FiPieChart,
 } from "react-icons/fi";
+import AnalyticsModal from "./Modal/AnalyticsModal";
 
 export default function Sidebar({
     showStats,
     toggleStats,
     handleRefresh,
     shopsStats,
+    shops,
 }) {
     const [showSupportModal, setShowSupportModal] = useState(false);
     const [refreshStatus, setRefreshStatus] = useState({
@@ -24,6 +27,7 @@ export default function Sidebar({
         error: false,
         message: "",
     });
+    const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
 
     const handleRefreshWithStatus = async () => {
         setRefreshStatus({
@@ -131,6 +135,15 @@ export default function Sidebar({
                         <span>Техпідтримка</span>
                     </button>
                 </li>
+                <li>
+                    <button
+                        onClick={() => setShowAnalyticsModal(true)}
+                        className={SideBarStyles.menuButton}
+                    >
+                        <FiPieChart className={SideBarStyles.icon} />
+                        <span>Детальна аналітика</span>
+                    </button>
+                </li>
             </ul>
 
             <div
@@ -162,6 +175,11 @@ export default function Sidebar({
                     </div>
                 )}
             </div>
+            <AnalyticsModal
+                isOpen={showAnalyticsModal}
+                onClose={() => setShowAnalyticsModal(false)}
+                shops={shops}
+            />
 
             <SupportModal
                 isOpen={showSupportModal}

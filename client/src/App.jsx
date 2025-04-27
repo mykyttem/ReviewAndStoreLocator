@@ -140,6 +140,7 @@ function App() {
                 toggleStats={toggleStats}
                 handleRefresh={handleRefresh}
                 shopsStats={shopsStats}
+                shops={shops}
             />
 
             <div className={styles.mainContentWrapper}>
