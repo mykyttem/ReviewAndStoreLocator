@@ -20,7 +20,7 @@ export default function AnalyticsModal({ isOpen, onClose, shops }) {
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <button className={styles.closeButton} onClick={onClose}>
-                    <FiX />
+                    <FiX className={styles.closeIcon} />
                 </button>
 
                 <h2>📊 Детальна аналітика магазинів</h2>
