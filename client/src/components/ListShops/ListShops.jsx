@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ShopCard from "../ShopCard/ShopCard";
 import ListShopsStyles from "./ListShops.module.css";
+import ShopSearch from "./ShopSearch";
 
 export default function ListShops({ shops, loading }) {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const isShopsArray = Array.isArray(shops);
 
     useEffect(() => {
@@ -21,13 +23,36 @@ export default function ListShops({ shops, loading }) {
         }
     }, [shops, isShopsArray]);
 
-    const filteredShops = selectedCategory
-        ? shops.filter((shop) => shop.category === selectedCategory)
-        : shops;
+    const filteredShops = shops.filter((shop) => {
+        // Filter by category if selected
+        const categoryMatch = selectedCategory
+            ? shop.category === selectedCategory
+            : true;
+
+        // Filter by search query (case insensitive)
+        const searchMatch = searchQuery
+            ? shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              (shop.description &&
+                  shop.description
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())) ||
+              (shop.address &&
+                  shop.address
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()))
+            : true;
+
+        return categoryMatch && searchMatch;
+    });
 
     return (
         <section className={ListShopsStyles.shopsSection}>
             <h2>🏪 Знайдені магазини</h2>
+
+            <ShopSearch
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            />
 
             {categories.length > 0 && (
                 <div className={ListShopsStyles.categoryFilters}>
@@ -74,6 +99,7 @@ export default function ListShops({ shops, loading }) {
                               {selectedCategory
                                   ? `з категорією "${selectedCategory}"`
                                   : ""}{" "}
+                              {searchQuery ? `за запитом "${searchQuery}"` : ""}{" "}
                               поблизу не знайдено 😞
                           </p>
                       )}
