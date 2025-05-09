@@ -1,26 +1,53 @@
+:root {
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-text: #334155;
+    --color-text-light: #64748b;
+    --color-border: #e2e8f0;
+    --color-bg: #ffffff;
+    --color-bg-light: #f8fafc;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --transition: all 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #60a5fa;
+        --color-primary-hover: #3b82f6;
+        --color-text: #e2e8f0;
+        --color-text-light: #94a3b8;
+        --color-border: #334155;
+        --color-bg: #1e293b;
+        --color-bg-light: #334155;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
 .consentPopup {
     position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #ffffff;
+    background: var(--color-bg);
     padding: 20px;
     z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius-lg);
     max-width: 520px;
-    width: calc(100% - 40px);
+    width: min(calc(100% - 40px), 520px);
     border: none;
     animation: slideUp 0.4s ease-out forwards;
 }
 
 @keyframes slideUp {
     from {
-        bottom: -100px;
+        transform: translateX(-50%) translateY(20px);
         opacity: 0;
     }
     to {
-        bottom: 20px;
+        transform: translateX(-50%) translateY(0);
         opacity: 1;
     }
 }
@@ -32,22 +59,22 @@
 }
 
 .consentContent p {
-    font-size: 15px;
+    font-size: 0.9375rem; /* 15px */
     line-height: 1.6;
-    color: #334155;
+    color: var(--color-text);
     margin: 0;
-    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 .consentContent a {
-    color: #3b82f6;
+    color: var(--color-primary);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s;
+    transition: var(--transition);
 }
 
 .consentContent a:hover {
-    color: #2563eb;
+    color: var(--color-primary-hover);
     text-decoration: underline;
 }
 
@@ -57,60 +84,51 @@
     flex-wrap: wrap;
 }
 
-.consentContent button {
-    padding: 10px 20px;
-    border-radius: 8px;
+.consentActions button {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.2s ease;
-    flex: 1;
+    transition: var(--transition);
+    flex: 1 0 auto;
     min-width: 120px;
 }
 
-.consentContent button:first-child {
-    background-color: #3b82f6;
+.consentActions button:first-child {
+    background-color: var(--color-primary);
     color: white;
     border: none;
 }
 
-.consentContent button:first-child:hover {
-    background-color: #2563eb;
+.consentActions button:first-child:hover {
+    background-color: var(--color-primary-hover);
     transform: translateY(-1px);
 }
 
-.consentContent button:last-child {
+.consentActions button:last-child {
     background-color: transparent;
-    color: #64748b;
-    border: 1px solid #e2e8f0;
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
 }
 
-.consentContent button:last-child:hover {
-    background-color: #f8fafc;
-    color: #334155;
+.consentActions button:last-child:hover {
+    background-color: var(--color-bg-light);
+    color: var(--color-text);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (max-width: 480px) {
     .consentPopup {
-        background: #1e293b;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        bottom: 10px;
+        padding: 16px;
     }
 
-    .consentContent p {
-        color: #e2e8f0;
+    .consentActions {
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .consentContent a {
-        color: #60a5fa;
-    }
-
-    .consentContent button:last-child {
-        border-color: #334155;
-        color: #94a3b8;
-    }
-
-    .consentContent button:last-child:hover {
-        background-color: #334155;
-        color: #f1f5f9;
+    .consentActions button {
+        width: 100%;
     }
 }
