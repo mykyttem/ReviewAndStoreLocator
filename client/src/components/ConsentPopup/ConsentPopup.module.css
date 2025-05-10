@@ -59,7 +59,7 @@
 }
 
 .consentContent p {
-    font-size: 0.9375rem; /* 15px */
+    font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-text);
     margin: 0;
