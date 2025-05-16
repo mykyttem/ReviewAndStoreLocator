@@ -1,6 +1,6 @@
 # ReviewAndStoreLocator
 
-Reviws and store locator for
+Reviws and store locator for search locate stores
 
 ## Evolution Timeline
 
