@@ -1,3 +1,17 @@
+:root {
+    --color-primary: #007bff;
+    --color-primary-dark: #0069d9;
+    --color-primary-darker: #0056b3;
+    --color-bg: #f8f9fa;
+    --shadow-inset: inset 2px 2px 4px rgba(0, 0, 0, 0.08),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+    --shadow-inset-focus: inset 1px 1px 2px rgba(0, 0, 0, 0.05),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.7);
+    --shadow-button: 2px 2px 4px rgba(0, 0, 0, 0.1),
+        -2px -2px 4px rgba(255, 255, 255, 0.5);
+    --transition: all 0.3s ease;
+}
+
 .searchContainer {
     display: flex;
     align-items: center;
@@ -6,28 +20,31 @@
 }
 
 .searchInput {
+    flex: 1;
     padding: 0.75rem 1rem;
     border-radius: 8px;
-    border: none;
+    border: 2px solid transparent;
     font-size: 1rem;
     min-width: 240px;
-    background-color: #f8f9fa;
-    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.08),
-        inset -2px -2px 4px rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-    outline: 2px solid transparent;
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-inset);
+    transition: var(--transition);
+    color: #333;
+}
+
+.searchInput::placeholder {
+    color: #6c757d;
+    opacity: 1;
 }
 
 .searchInput:focus {
-    outline-color: rgba(0, 123, 255, 0.3);
-    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.05),
-        inset -1px -1px 2px rgba(255, 255, 255, 0.7),
-        0 0 0 4px rgba(0, 123, 255, 0.1);
+    border-color: rgba(0, 123, 255, 0.3);
+    box-shadow: var(--shadow-inset-focus), 0 0 0 4px rgba(0, 123, 255, 0.1);
     background-color: #fff;
 }
 
 .searchButton {
-    background-color: #007bff;
+    background-color: var(--color-primary);
     color: white;
     border: none;
     padding: 0.75rem 1.25rem;
@@ -35,40 +52,45 @@
     cursor: pointer;
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1),
-        -2px -2px 4px rgba(255, 255, 255, 0.5);
+    transition: var(--transition);
+    box-shadow: var(--shadow-button);
 }
 
 .searchButton:hover {
-    background-color: #0069d9;
+    background-color: var(--color-primary-dark);
     transform: translateY(-1px);
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15),
         -3px -3px 6px rgba(255, 255, 255, 0.5);
 }
 
 .searchButton:active {
+    background-color: var(--color-primary-darker);
     transform: translateY(0);
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1),
         -1px -1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .searchButton:focus-visible {
-    outline: 2px solid #0056b3;
+    outline: 2px solid var(--color-primary-darker);
     outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .searchInput,
+    .searchButton {
+        transition: none;
+    }
 }
 
 @media (max-width: 480px) {
     .searchContainer {
         flex-direction: column;
-        align-items: stretch;
+        gap: 0.5rem;
     }
 
-    .searchInput {
-        min-width: 100%;
-    }
-
+    .searchInput,
     .searchButton {
         width: 100%;
+        box-sizing: border-box;
     }
 }
