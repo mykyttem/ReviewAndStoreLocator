@@ -48,9 +48,7 @@ async def search_by_place(request: Request):
             shop_lng = place.get("geometry", {}).get("location", {}).get("lng")
 
             map_url = None
-            if place_id:
-                map_url = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
-            elif shop_lat and shop_lng:
+            if shop_lat and shop_lng:
                 map_url = f"https://www.google.com/maps?q={shop_lat},{shop_lng}"
 
             photos = []

@@ -103,18 +103,15 @@ export default function ShopCard({ shop, index }) {
 
             <div className={ShopCardStyles.linksContainer}>
                 {shop.location ? (
-                    <a
-                        href={`${shop.map_url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <button
+                        onClick={() => window.open(shop.map_url, '_blank')}
                         className={ShopCardStyles.mapLink}
                     >
                         Відкрити на мапі
-                    </a>
+                    </button>
                 ) : (
                     <p>Локація не надана.</p>
                 )}
-
                 {shop.website && (
                     <a
                         href={
